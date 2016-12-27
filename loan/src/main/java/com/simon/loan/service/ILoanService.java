@@ -1,10 +1,12 @@
 package com.simon.loan.service;
 
-import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import com.simon.loan.entity.User;
 
+
 public interface ILoanService {
 
-	List<User> getLoanList();
+	Page<User> getLoanList(Pageable pageable);
 }
