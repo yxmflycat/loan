@@ -1,7 +1,5 @@
 package com.simon.loan.web;
 
-import java.util.List;
-
 import javax.annotation.Resource;
 
 import org.springframework.data.domain.Page;
@@ -48,11 +46,11 @@ public class IndexControl {
 	}
 
 	@RequestMapping("/ii")
-	public @ResponseBody List<User> helloWorld(@RequestParam(value = "page") Integer page,
+	public @ResponseBody Page<User> helloWorld(@RequestParam(value = "page") Integer page,
 			@RequestParam(value = "size") Integer size) {
 		Sort sort = new Sort(Direction.DESC, "id");
 		Pageable pageable = new PageRequest(page, size, sort);
-		return service.getLoanList(pageable).getContent();
+		return service.getLoanList(pageable);
 	}
 	
 	@RequestMapping("/qq")

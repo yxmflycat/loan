@@ -11,9 +11,7 @@
 <title>贷款信息</title>
 <link href="/static/css/bootstrap.min.css" rel="stylesheet" />
 <link href="/static/css/dashboard.css" rel="stylesheet" />
-<link href="/static/css/pagination.css" rel="stylesheet" />
 <script type="text/javascript" src="/static/js/jquery-3.1.1.min.js"></script>
-<script type="text/javascript" src="/static/js/pagination.min.js"></script>
 <script type="text/javascript" src="/static/js/index.js"></script>
 </head>
 
@@ -22,22 +20,32 @@
 		<div class="row clearfix">
 			<div class="col-md-12 column">
 				<ul class="nav nav-tabs">
-					<li class="active"><a href="#">首页</a></li>
+					<li class="active"><a th:href="@{${'/index/q'}(page=0,size=10)}">首页</a></li>
 					<li><a href="#">简介</a></li>
 					<li class="disabled"><a href="#">信息</a></li>
-					<li class="dropdown pull-right"><a href="#"
-						data-toggle="dropdown" class="dropdown-toggle">下拉<strong
-							class="caret"></strong></a>
+					<li class="dropdown pull-right">
+						<form class="form-inline" role="form" th:action="@{${'/index/serch'}">
+							<div class="form-group">
+								<label class="sr-only" for="exampleInputEmail2">公司名称</label> <input
+									type="email" class="form-control" id="exampleInputEmail2"
+									placeholder="根据公司名称搜索" />
+							</div>
+							<button type="submit" class="btn btn-default">搜索</button>
+						</form>
+						
 						<ul class="dropdown-menu">
 							<li><a href="#">操作</a></li>
 							<li><a href="#">设置栏目</a></li>
 							<li><a href="#">更多设置</a></li>
 							<li class="divider"></li>
 							<li><a href="#">分割线</a></li>
-						</ul></li>
+						</ul>
+					</li>
 				</ul>
+				
 				<div class="row clearfix">
 					<div class="col-md-12 column">
+					<br/>
 						<table class="table">
 							<thead>
 								<tr>
@@ -48,7 +56,7 @@
 								</tr>
 							</thead>
 							<tbody>
-								<tr th:each="user,userStat: ${result.content}">
+								<tr th:each="user: ${result.content}" th:class="${userStat.even}? 'success' : ''">
 									<td th:text="${userStat.index+1}"></td>
 									<td th:text="${user.backPrincipal2015}"></td>
 									<td th:text="${user.assetsTotal}"></td>
@@ -61,9 +69,17 @@
 				<div class="row clearfix">
 					<div class="col-md-12 column">
 						<ul class="pagination">
-							<li th:class="${result.number eq 0} ? 'disabled' : ''"><a href="#">上一页</a></li>
-							<li th:each="pageNo:${#numbers.sequence(0,result.totalPages-1)}"><a href="" th:text="${pageNo+1}" th:class="${result.totalPages eq pageNo}? 'active' : ''"></a></li>
-							<li th:class="${result.last} ? 'disabled' : ''"><a href="#">下一页</a></li>
+							<li th:class="${result.first} ? 'disabled' : ''">
+								<a th:if="${not result.first}" th:href="@{${'/index/q'}(page=${result.number-1},size=${result.size})}">上一页</a>
+								<a th:if="${result.first}" href="javascript:void(0);">下一页</a>
+							</li>
+							<li th:each="pageNo:${#numbers.sequence(0,result.totalPages-1)}">
+								<a th:href="@{${'/index/q'}(page=${pageNo},size=${result.size})}" th:text="${pageNo+1}" th:class="${result.number eq pageNo}? 'active' : ''"></a>
+							</li>
+							<li th:class="${result.last} ? 'disabled' : ''">
+								<a th:if="${not result.last}" th:href="@{${'/index/q'}(page=${result.number+1},size=${result.size})}">下一页</a>
+								<a th:if="${result.last}" href="javascript:void(0);">下一页</a>
+							</li>
 						</ul>
 					</div>
 				</div>
